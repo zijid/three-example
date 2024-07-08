@@ -12,7 +12,7 @@ export default defineConfig({
 	// docs
 		outDir: 'docs',
 		//./
-		base: './',
+		base: '/three-example/',
   },
   resolve: {
 	alias: [
