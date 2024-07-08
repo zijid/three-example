@@ -8,6 +8,10 @@ export default defineConfig({
   server: {
       host: true,
   },
+  build:{
+	// docs
+		outDir: 'docs',
+  },
   resolve: {
 	alias: [
 	  {
