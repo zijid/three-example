@@ -1,0 +1,19 @@
+.box{
+	text-shadow: 1px 1px #000;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    background: #5585ff8c;
+    border: 2px solid #5eb8ff;
+    padding: 1em;
+    width: 50vw;
+    /* height: 50vh; */
+    user-select: none;
+	pointer-events: none;
+	transition:opacity  0.3s;
+}
+.hint{
+	background-color: #00000070;
+	color: #fff;
+	padding:0.5em 1em;
+}
