@@ -1,0 +1,1 @@
+import{j as t,R as s,B as e,L as r}from"./index-Dhyqi1wC.js";function a(){return t.jsx(s,{status:404,title:"404",subTitle:"您访问的页面不存在！",extra:t.jsx(e,{type:"primary",children:t.jsx(r,{to:"/",children:"去首页"})})})}export{a as default};
