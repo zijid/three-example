@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
       host: true,
   },
-  base: '/docs',
+  base: '/three-example',
   build:{
 	// docs
 		outDir: 'docs',
