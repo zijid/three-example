@@ -5,9 +5,9 @@ import './index.css'
 import {HashRouter } from "react-router-dom"
 import { RecoilRoot } from 'recoil';
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <HashRouter  basename='three-example'>
-	<RecoilRoot>
-    	<App />
-	</RecoilRoot>
-  </HashRouter>
+	<HashRouter>
+		<RecoilRoot>
+			<App />
+		</RecoilRoot>
+	</HashRouter>
 )
