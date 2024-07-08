@@ -11,6 +11,8 @@ export default defineConfig({
   build:{
 	// docs
 		outDir: 'docs',
+		//./
+		base: './',
   },
   resolve: {
 	alias: [
