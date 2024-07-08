@@ -29,7 +29,7 @@ export default function(){
 	<div className='box'>
 		{
 			pageNames.map((i,index)=>{
-				return <iframe frameBorder={0} width={window.innerWidth/2-20} height={window.innerHeight/2} key={index} src={`/${i}`}></iframe>
+				return <iframe frameBorder={0} width={window.innerWidth/2-20} height={window.innerHeight/2} key={index} src={`/#/three-example/${i}`}></iframe>
 			})
 		}
 		{/* <iframe src="/water"></iframe>
