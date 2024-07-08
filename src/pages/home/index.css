@@ -1,11 +1,17 @@
 .box{
-	
+	display: flex;
+    flex-wrap: wrap;
 }
 iframe{
-	width: calc( 50% );
+	width: calc( 100% );
 	height: 50vh;
 	border: 0;
 	margin: 0;
 	display: block;
 	float: left;
+}
+.disRow{
+	width: 40%;
+	display: inline-block;
+	padding: 1em 1em;
 }

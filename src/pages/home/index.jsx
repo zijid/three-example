@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createElement, useRef, useEffect } from 'react';
-
+import { Link } from 'react-router-dom';
+import './index.css'
 const modules = import.meta.glob('../*/index.jsx')
 const arr=[
     "404",
@@ -29,7 +30,10 @@ export default function(){
 	<div className='box'>
 		{
 			pageNames.map((i,index)=>{
-				return <iframe frameBorder={0} width={window.innerWidth/2-20} height={window.innerHeight/2} key={index} src={`/three-example/#/${i}`}></iframe>
+				return <div key={index} className='disRow'>
+					<div><iframe frameBorder={0} width={window.innerWidth/2-20} height={window.innerHeight/2} src={`/three-example/#/${i}`}></iframe></div>
+					<a target='_blank' href={`/three-example/#/${i}`}>{i}</a>
+				</div>
 			})
 		}
 		{/* <iframe src="/water"></iframe>
