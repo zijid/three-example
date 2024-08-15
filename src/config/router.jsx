@@ -131,6 +131,22 @@ const routes = createUseRoutes([
 		component: lazy(() => import("@/pages/DirectionalLight")),
 	},
 	{
+		path: "Worldlet",
+		component: lazy(() => import("@/pages/Worldlet")),
+	},
+	{
+		path: "Edit",
+		component: lazy(() => import("@/pages/Edit")),
+	},
+	{
+		path: "ExtrudeGeometry",
+		component: lazy(() => import("@/pages/ExtrudeGeometry")),
+	},
+	{
+		path: "Corners",
+		component: lazy(() => import("@/pages/Corners")),
+	},
+	{
 		path: '*',
 		component: lazy(() => import('@/pages/404')),
 	}

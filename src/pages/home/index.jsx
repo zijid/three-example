@@ -27,6 +27,7 @@ export default function(){
 
 	return <>
 	
+	<h1>three的一些效果</h1>
 	<div className='box'>
 		{
 			pageNames.map((i,index)=>{

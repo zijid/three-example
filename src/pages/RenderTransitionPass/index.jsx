@@ -16,7 +16,7 @@ export default function(){
 	const canvasRef = useRef(null);  
 	useEffect(() => {
 		const canvas=canvasRef.current
-	  if (canvas) {  
+	  	if (canvas) {  
 		
 			const world=new World(canvas)
 			world.init()
@@ -119,8 +119,8 @@ export default function(){
 			}
 			const textures=[]
 			const loader = new THREE.TextureLoader();
-			textures[ 0 ] = loader.load( '/transition1.png' );
-			textures[ 1 ] = loader.load( '/transition2.png' );
+			textures[ 0 ] = loader.load( './transition1.png' );
+			textures[ 1 ] = loader.load( './transition2.png' );
 			const composer = new EffectComposer( renderer );
 			const renderTransitionPass = new RenderTransitionPass( scene1, camera1, scene2, camera2 );
 			renderTransitionPass.setTexture( textures[0] );

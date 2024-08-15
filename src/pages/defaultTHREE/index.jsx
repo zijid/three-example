@@ -16,8 +16,8 @@ export default function(){
 
 			const {scene,camera,renderer}=world
 			camera.position.set(5,5,1)
-			const light = new THREE.AmbientLight( 0x404040 ,10); // 柔和的白光
-			world.createModel(light)
+			const ambientLight = new THREE.AmbientLight( 0x404040 ,10); // 柔和的白光
+			world.createModel(ambientLight)
 
 			camera.lookAt(0,0,0)
 

@@ -1,0 +1,359 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+	<title>地图遮罩</title>
+	<style>
+		html,
+		body,
+		#container {
+			margin: 0;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="container"></div>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "b07fcf49090bccdf41ac9e4dc0de7c98",
+		};
+	</script>
+	<script
+		src="https://webapi.amap.com/maps?v=2.0&key=296f0df6a001f3c007978d67c121c3bd&plugin=AMap.DistrictSearch,AMap.MarkerCluster"></script>
+
+	<style>
+		.tag {
+			width: fit-content;
+			height: 100px;
+			background: #ff00ff;
+			transition: all 0.3s;
+			white-space: nowrap;
+			padding: 0.3em 1em;
+			outline: 1px solid #03A9F4;
+			background: #3F51B5;
+			color: #fff;
+		}
+
+		.title {
+			font-weight: bold;
+		}
+
+		.show {
+			opacity: 1;
+			display: block;
+		}
+
+		.hide {
+			opacity: 0;
+			animation: hide 0.3s forwards;
+		}
+
+		@keyframes hide {
+			from {
+				display: block;
+			}
+
+			to {
+				display: none;
+			}
+		}
+	</style>
+	<script>
+
+		const layers1 = new AMap.LabelsLayer({
+			// opacity:0,
+			// visible:false,
+			allowCollision: true,
+
+		})
+
+		var map = new AMap.Map('container', {
+			mapStyle: 'amap://styles/ce32b6a75ca465accee66aac42117f8f', //设置地图的显示样式
+			mapStyle: "amap://styles/grey", //设置地图的显示样式
+
+			resizeEnable: true,
+			zoom: 8,
+			center: [107.781017, 30.115379],
+			layers: [
+				// layers1
+				// new AMap.TileLayer.RoadNet({
+				//     zIndex:20
+				// })
+			]
+		});
+		map.add(layers1);
+		var distProvince = new AMap.DistrictLayer.Province({
+			zIndex: 10, //设置图层层级
+			zooms: [2, 15], //设置图层显示范围
+			adcode: "500000", //设置行政区 adcode
+			depth: 2, //设置数据显示层级，0：显示国家面，1：显示省级，当国家为中国时设置depth为2的可以显示市一级
+		});
+
+		// 3、设置行政区图层样式
+		distProvince.setStyles({
+			"stroke-width": 2, //描边线宽
+			"county-stroke": "#000000", //描边颜色线宽
+			fill: function (data) {
+				//设置区域填充颜色，可根据回调信息返回区域信息设置不同填充色
+				//回调返回区域信息数据，字段包括 SOC(国家代码)、NAME_ENG(英文名称)、NAME_CHN(中文名称)等
+				//国家代码名称说明参考 https://a.amap.com/jsapi_demos/static/demo-center/js/soc-list.json
+				return "#1a232c";
+			},
+		});
+
+		var normalMarker = new AMap.Marker({
+			anchor: 'bottom-center',
+			offset: [0, -15],
+		});
+		//4、将简易行政区图层添加到地图
+		map.add(distProvince);
+		function init(){
+			new AMap.DistrictSearch({
+				extensions: 'all',
+				subdistrict: 11
+			}).search('重庆市', function (status, result) {
+				console.log(`result:`, result)
+
+				var markers = [];
+
+				var icon = {
+					type: 'image',
+					image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+					size: [20, 30],
+					anchor: 'bottom-center',
+				};
+				result.districtList[0].districtList.forEach(i => {
+					i.districtList.forEach(j => {
+						var center = j.center
+
+
+
+						const position = new AMap.LngLat(center.lng, center.lat);
+
+						var curPosition = position;
+						var curData = {
+							position: curPosition,
+							icon
+						};
+
+						var labelMarker = new AMap.LabelMarker(curData);
+
+						markers.push(labelMarker);
+
+
+						// 给marker绑定事件
+
+						// circleMarker.on('mouseover',function(){
+						// 	div.classList.add("show")
+						// 	div.classList.remove("hide")
+						// 	console.log(`div:`,div)
+						// })
+						// circleMarker.on('mouseout',function(){
+						// 	div.classList.remove("show")
+						// 	div.classList.add("hide")
+
+
+						// })
+						labelMarker.on('mouseover', function (e) {
+							div.classList.add("show")
+							div.classList.remove("hide")
+						});
+
+						labelMarker.on('mouseout', function () {
+							div.classList.remove("show")
+							div.classList.add("hide")
+						});
+
+						var circleMarker = new AMap.CircleMarker({
+							center: center,
+							radius: 10 || 10 + Math.random() * 10,//3D视图下，CircleMarker半径不要超过64px
+							strokeColor: 'white',
+							strokeWeight: 2,
+							strokeOpacity: 0.5,
+							fillColor: 'rgba(255,0,0,1)',
+							fillColor: 'rgba(0,0,255,1)',
+							fillOpacity: 0.5,
+							zIndex: 10,
+							bubble: true,
+							cursor: 'pointer',
+							clickable: true,
+							// offset: new AMap.Pixel(-50, -1030)
+						})
+						// circleMarker.setMap(map)
+						const div = document.createElement('div');
+						div.innerHTML = `
+					<div class="title">${j.name}</div>
+					`
+						div.classList.add("tag")
+						div.classList.add("hide")
+						var marker = new AMap.Marker({
+							position: position,
+							// 将 html 传给 content
+							content: div,
+							// 以 icon 的 [center bottom] 为原点
+							anchor: "bottom-center",
+							offset: new AMap.Pixel(0, -50)
+
+						});
+						// circleMarker.on('mouseover',function(){
+						// 	div.classList.add("show")
+						// 	div.classList.remove("hide")
+						// 	console.log(`div:`,div)
+						// })
+						// circleMarker.on('mouseout',function(){
+						// 	div.classList.remove("show")
+						// 	div.classList.add("hide")
+
+
+						// })
+						map.add(marker);
+
+					})
+				})
+
+				layers1.add(markers);
+				// 一次性将海量点添加到图层
+				// 外多边形坐标数组和内多边形坐标数组
+				var outer = [
+					new AMap.LngLat(-360, 90, true),
+					new AMap.LngLat(-360, -90, true),
+					new AMap.LngLat(360, -90, true),
+					new AMap.LngLat(360, 90, true),
+				];
+				var holes = result.districtList[0].boundaries
+
+				var pathArray = [
+					outer
+				];
+				pathArray.push.apply(pathArray, holes)
+				var polygon = new AMap.Polygon({
+					strokeColor: '#00eeff',
+					strokeWeight: 1,
+					fillColor: '#3e3e3e',
+					fillOpacity: 1
+				});
+				polygon.setPath(pathArray);
+				map.add(polygon)
+			})
+		}
+		// map.on("click",(e)=>{
+		// 	console.log(`e:`,e)
+		// })
+		
+
+		new AMap.DistrictSearch({
+			extensions: 'all',
+			subdistrict: 11
+		}).search('重庆市', function (status, result) {
+			console.log(`result:`, result)
+
+			var markers = [];
+			const points=[]
+			var icon = {
+				type: 'image',
+				image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+				size: [20, 30],
+				anchor: 'bottom-center',
+			};
+			result.districtList[0].districtList.forEach(i => {
+				i.districtList.forEach(j => {
+					var center = j.center
+					const position = new AMap.LngLat(center.lng, center.lat);
+					points.push({
+						weight:1,lnglat:[center.lng, center.lat],name:j.name
+					})
+				})
+			})
+			
+			var count = points.length;
+			var _renderClusterMarker = function (context) {
+				// 聚合中点个数
+				var clusterCount = context.count;
+				var div = document.createElement('div');
+				// 聚合点配色
+				var defaultColor = [
+					'204,235,197',
+					'168,221,181',
+					'123,204,196',
+					'78,179,211',
+					'43,140,190',
+				]
+				if (clusterCount >= 0 && clusterCount < 10) {
+					bgColor = defaultColor[0];
+				} else if (clusterCount >= 10 && clusterCount < 100) {
+					bgColor = defaultColor[1];
+				} else if (clusterCount >= 100 && clusterCount < 1000) {
+					bgColor = defaultColor[2];
+				} else if (clusterCount >= 1000 && clusterCount < 10000) {
+					bgColor = defaultColor[3];
+				} else if (clusterCount >= 10000) {
+					bgColor = defaultColor[4];
+				}
+				div.style.backgroundColor = 'rgba(' + bgColor + ',.5)';
+				var size = Math.round(25 + Math.pow(clusterCount / count, 1 / 5) * 40);
+				div.style.width = div.style.height = size + 'px';
+				div.style.border = 'solid 1px rgba(' + bgColor + ',1)';
+				div.style.borderRadius = size / 2 + 'px';
+				div.innerHTML = context.count;
+				div.style.lineHeight = size + 'px';
+				div.style.color = '#ffffff';
+				div.style.fontSize = '12px';
+				div.style.textAlign = 'center';
+				context.marker.setOffset(new AMap.Pixel(-size / 2, -size / 2));
+				context.marker.setContent(div);
+			};
+			var _renderMarker = function (context) {
+				var content = `<div style="background-color: rgba(255,255,178,.9); height: 18px; width: 18px; border: 1px solid rgba(255,255,178,1); border-radius: 12px; box-shadow: rgba(0, 0, 0, 1) 0px 0px 3px;"></div>`;
+				var offset = new AMap.Pixel(-9, -9);
+				context.marker.setContent(content)
+				context.marker.setOffset(offset)
+			}
+			var cluster = new AMap.MarkerCluster(map, points, {
+				gridSize: 60, // 聚合网格像素大小
+				renderClusterMarker: _renderClusterMarker, // 自定义聚合点样式
+				renderMarker: _renderMarker,   // 自定义非聚合点样式
+			});
+			cluster.on("click", function (e) {
+				console.log(`e:`,e)
+				const position = new AMap.LngLat( e.lnglat.lng,  e.lnglat.lat);
+
+                if(position){
+                    normalMarker.setContent(
+                        '<div class="tag">'
+                            + position +
+                            '<div class="amap-info-sharp"></div>' +
+                        '</div>');
+                    normalMarker.setPosition(position);
+                    map.add(normalMarker);
+				}
+			})
+			var outer = [
+				new AMap.LngLat(-360, 90, true),
+				new AMap.LngLat(-360, -90, true),
+				new AMap.LngLat(360, -90, true),
+				new AMap.LngLat(360, 90, true),
+			];
+			var holes = result.districtList[0].boundaries
+
+			var pathArray = [
+				outer
+			];
+			pathArray.push.apply(pathArray, holes)
+			var polygon = new AMap.Polygon({
+				strokeColor: '#00eeff',
+				strokeWeight: 1,
+				fillColor: '#3e3e3e',
+				fillOpacity: 1
+			});
+			polygon.setPath(pathArray);
+			map.add(polygon)
+		})
+	</script>
+</body>
+
+</html>
